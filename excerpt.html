@@ -23,16 +23,25 @@
       max-width: 800px;
       line-height: 1.7;
       white-space: pre-wrap;
+      z-index: 2;
     }
 
-    .hidden {
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
+    #glitch {
+      display: none;
+      font-size: 1.5em;
+      color: red;
+      animation: flicker 0.2s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.1; }
     }
   </style>
 </head>
 <body>
   <div id="excerpt"></div>
+  <div id="glitch">▉ ▉ ▉ ▉ ▉ SYSTEM FAULT ▉ ▉ ▉</div>
 
   <script>
     const excerpts = [
@@ -44,8 +53,8 @@
     ];
 
     const excerptEl = document.getElementById("excerpt");
-    const randomIndex = Math.floor(Math.random() * excerpts.length);
-    const text = excerpts[randomIndex];
+    const glitchEl = document.getElementById("glitch");
+    const text = excerpts[Math.floor(Math.random() * excerpts.length)];
     let i = 0;
 
     function typeWriter() {
@@ -55,11 +64,14 @@
         setTimeout(typeWriter, 45);
       } else {
         setTimeout(() => {
-          excerptEl.classList.add("hidden");
+          excerptEl.style.display = "none";
+          glitchEl.style.display = "block";
+          let count = parseInt(localStorage.getItem("accessCount") || "0");
+          localStorage.setItem("accessCount", count + 1);
           setTimeout(() => {
-            window.location.href = "promo.html";
-          }, 1000);
-        }, 5000); // Stay visible for 5 seconds
+            window.location.href = "index.html";
+          }, 2000);
+        }, 4000);
       }
     }
 

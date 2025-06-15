@@ -102,7 +102,8 @@
 
   <script>
     const PASS_PHRASE = "FROM CHAOS CAME FORTH EREBUS";
-    const DESTINATION = "excerpt.html";
+    const DEFAULT_DESTINATION = "excerpt.html";
+    const SECRET_DESTINATION = "secret.html";
 
     let attemptCount = 0;
     const userInput = document.getElementById("userInput");
@@ -124,10 +125,19 @@
           document.getElementById("inputLine").style.display = "none";
           document.getElementById("message").style.display = "none";
           pulseOverlay.classList.add("pulse");
+
+          const accessCount = parseInt(localStorage.getItem("accessCount") || "0");
+
           setTimeout(() => {
             document.body.style.transition = "opacity 1s ease-out";
             document.body.style.opacity = 0;
-            setTimeout(() => window.location.href = DESTINATION, 1000);
+            setTimeout(() => {
+              if (accessCount >= 3) {
+                window.location.href = SECRET_DESTINATION;
+              } else {
+                window.location.href = DEFAULT_DESTINATION;
+              }
+            }, 1000);
           }, 1500);
         } else {
           attemptCount++;
