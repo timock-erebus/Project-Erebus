@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ACCESS GRANTED – EREBUS</title>
+  <style>
+    body {
+      background-color: black;
+      color: #00ff00;
+      font-family: 'Courier New', Courier, monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 100vh;
+      margin: 0;
+      padding: 40px;
+    }
+
+    #excerpt {
+      font-size: 1.3em;
+      max-width: 800px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .hidden {
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+  <div id="excerpt"></div>
+
+  <script>
+    const excerpts = [
+      "They marked their dead with coins—one for each regret. He placed the last in his own mouth.",
+      "The island had never truly been empty. It had just learned to mimic silence.",
+      "She spoke in bursts of static, always at night. And always just after he stopped believing she was real.",
+      "Each file was a confession, and each confession felt more like a warning.",
+      "There was no record of Site Seven, except in the margins of the erased."
+    ];
+
+    const excerptEl = document.getElementById("excerpt");
+    const randomIndex = Math.floor(Math.random() * excerpts.length);
+    const text = excerpts[randomIndex];
+    let i = 0;
+
+    function typeWriter() {
+      if (i < text.length) {
+        excerptEl.textContent += text.charAt(i);
+        i++;
+        setTimeout(typeWriter, 45);
+      } else {
+        setTimeout(() => {
+          excerptEl.classList.add("hidden");
+          setTimeout(() => {
+            window.location.href = "promo.html";
+          }, 1000);
+        }, 5000); // Stay visible for 5 seconds
+      }
+    }
+
+    typeWriter();
+  </script>
+</body>
+</html>
