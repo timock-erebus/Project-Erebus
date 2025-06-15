@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ACCESS GRANTED – EREBUS</title>
+  <style>
+    body {
+      background-color: black;
+      color: #00ff00;
+      font-family: 'Courier New', Courier, monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 40px;
+      text-align: center;
+    }
+
+    #excerpt {
+      font-size: 1.2em;
+      max-width: 800px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div id="excerpt"></div>
+
+  <script>
+    const excerpts = [
+      "He moved like someone who had already died once.",
+      "The sea was black that night, not from oil, but from absence.",
+      "She said she could still hear the radio, even with the power cut.",
+      "They marked their dead with coins—he’d started doing it too.",
+      "There was no record of Site Seven, except in the margins."
+    ];
+
+    const excerptEl = document.getElementById("excerpt");
+    const randomIndex = Math.floor(Math.random() * excerpts.length);
+    excerptEl.textContent = excerpts[randomIndex];
+
+    setTimeout(() => {
+      document.body.style.transition = "opacity 1s ease-out";
+      document.body.style.opacity = 0;
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1000);
+    }, 30000);
+  </script>
+</body>
+</html>
