@@ -53,6 +53,42 @@
       color: red;
       font-size: 1em;
     }
+
+    #pulseOverlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      background: radial-gradient(circle, rgba(0,255,0,0.6) 0%, rgba(0,255,0,0) 80%);
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    .pulse {
+      animation: pulseEffect 1.5s forwards;
+    }
+
+    @keyframes pulseEffect {
+      0% {
+        width: 20px;
+        height: 20px;
+        opacity: 0.6;
+      }
+      50% {
+        width: 150vmax;
+        height: 150vmax;
+        opacity: 0.4;
+      }
+      100% {
+        width: 200vmax;
+        height: 200vmax;
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -62,6 +98,7 @@
     <span id="userInput" contenteditable="true">ENTER PASSWORD</span>
   </div>
   <div id="message"></div>
+  <div id="pulseOverlay"></div>
 
   <script>
     const PASS_PHRASE = "FROM CHAOS CAME FORTH EREBUS";
@@ -70,11 +107,11 @@
     let attemptCount = 0;
     const userInput = document.getElementById("userInput");
     const message = document.getElementById("message");
+    const pulseOverlay = document.getElementById("pulseOverlay");
 
     userInput.focus();
 
     userInput.addEventListener("keydown", function(e) {
-      // Clear the placeholder on first keypress
       if (userInput.innerText === "ENTER PASSWORD" && e.key.length === 1) {
         userInput.innerText = "";
       }
@@ -84,9 +121,14 @@
         const entered = userInput.innerText.trim().toUpperCase();
 
         if (entered === PASS_PHRASE) {
-          document.body.style.transition = "opacity 1s ease-out";
-          document.body.style.opacity = 0;
-          setTimeout(() => window.location.href = DESTINATION, 1000);
+          document.getElementById("inputLine").style.display = "none";
+          document.getElementById("message").style.display = "none";
+          pulseOverlay.classList.add("pulse");
+          setTimeout(() => {
+            document.body.style.transition = "opacity 1s ease-out";
+            document.body.style.opacity = 0;
+            setTimeout(() => window.location.href = DESTINATION, 1000);
+          }, 1500);
         } else {
           attemptCount++;
           let waitTime = 10000 * Math.pow(2, attemptCount - 1);
