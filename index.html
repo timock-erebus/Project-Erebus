@@ -54,6 +54,13 @@
       font-size: 1em;
     }
 
+    #cipherEffect {
+      margin-top: 30px;
+      font-size: 1.5em;
+      letter-spacing: 0.2em;
+      display: none;
+    }
+
     #pulseOverlay {
       position: absolute;
       top: 50%;
@@ -98,6 +105,7 @@
     <span id="userInput" contenteditable="true">ENTER PASSWORD</span>
   </div>
   <div id="message"></div>
+  <div id="cipherEffect"></div>
   <div id="pulseOverlay"></div>
 
   <script>
@@ -111,8 +119,46 @@
     const userInput = document.getElementById("userInput");
     const message = document.getElementById("message");
     const pulseOverlay = document.getElementById("pulseOverlay");
+    const cipherEffect = document.getElementById("cipherEffect");
 
     userInput.focus();
+
+    function generateCipherSequence(length = 12) {
+      let output = "";
+      for (let i = 0; i < length; i++) {
+        output += Math.floor(Math.random() * 10).toString();
+      }
+      return output;
+    }
+
+    function flickerCipherEffect(duration = 3000) {
+      cipherEffect.style.display = "block";
+      let interval = setInterval(() => {
+        cipherEffect.textContent = generateCipherSequence(12);
+      }, 100);
+      setTimeout(() => {
+        clearInterval(interval);
+        cipherEffect.textContent = generateCipherSequence(12);
+        proceedToNext();
+      }, duration);
+    }
+
+    function proceedToNext() {
+      document.body.style.transition = "opacity 1s ease-out";
+      document.body.style.opacity = 0;
+      setTimeout(() => {
+        if (userInput.innerText.trim().toUpperCase() === BACKDOOR_PHRASE) {
+          window.location.href = BACKDOOR_DESTINATION;
+        } else {
+          const accessCount = parseInt(localStorage.getItem("accessCount") || "0");
+          if (accessCount >= 3) {
+            window.location.href = SECRET_DESTINATION;
+          } else {
+            window.location.href = DEFAULT_DESTINATION;
+          }
+        }
+      }, 1000);
+    }
 
     userInput.addEventListener("keydown", function(e) {
       if (userInput.innerText === "ENTER PASSWORD" && e.key.length === 1) {
@@ -125,25 +171,9 @@
 
         if (entered === PASS_PHRASE || entered === BACKDOOR_PHRASE) {
           document.getElementById("inputLine").style.display = "none";
-          document.getElementById("message").style.display = "none";
+          message.style.display = "none";
           pulseOverlay.classList.add("pulse");
-
-          setTimeout(() => {
-            document.body.style.transition = "opacity 1s ease-out";
-            document.body.style.opacity = 0;
-            setTimeout(() => {
-              if (entered === BACKDOOR_PHRASE) {
-                window.location.href = BACKDOOR_DESTINATION;
-              } else {
-                const accessCount = parseInt(localStorage.getItem("accessCount") || "0");
-                if (accessCount >= 3) {
-                  window.location.href = SECRET_DESTINATION;
-                } else {
-                  window.location.href = DEFAULT_DESTINATION;
-                }
-              }
-            }, 1000);
-          }, 1500);
+          flickerCipherEffect(3000); // simulate cipher calculation
         } else {
           attemptCount++;
           let waitTime = 10000 * Math.pow(2, attemptCount - 1);
