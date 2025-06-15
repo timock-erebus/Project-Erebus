@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PROJECT EREBUS // ACCESS</title>
+  <style>
+    body {
+      background-color: black;
+      color: #00ff00;
+      font-family: 'Courier New', Courier, monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      flex-direction: column;
+    }
+
+    #title {
+      font-size: 2em;
+      margin-bottom: 40px;
+    }
+
+    #inputLine {
+      font-size: 1.5em;
+      white-space: nowrap;
+    }
+
+    #userInput {
+      outline: none;
+      color: #00ff00;
+      font-family: inherit;
+    }
+
+    .blinking-cursor {
+      font-weight: bold;
+      font-size: 1.5em;
+      color: #00ff00;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    #message {
+      margin-top: 20px;
+      color: red;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+  <div id="title">PROJECT EREBUS</div>
+  <div id="inputLine">
+    <span class="blinking-cursor">|</span>
+    <span id="userInput" contenteditable="true">ENTER PASSWORD</span>
+  </div>
+  <div id="message"></div>
+
+  <script>
+    const PASS_PHRASE = "FROM CHAOS CAME FORTH EREBUS";
+    const DESTINATION = "excerpt.html";
+
+    let attemptCount = 0;
+    const userInput = document.getElementById("userInput");
+    const message = document.getElementById("message");
+
+    userInput.focus();
+
+    userInput.addEventListener("keydown", function(e) {
+      // Clear the placeholder on first keypress
+      if (userInput.innerText === "ENTER PASSWORD" && e.key.length === 1) {
+        userInput.innerText = "";
+      }
+
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const entered = userInput.innerText.trim().toUpperCase();
+
+        if (entered === PASS_PHRASE) {
+          document.body.style.transition = "opacity 1s ease-out";
+          document.body.style.opacity = 0;
+          setTimeout(() => window.location.href = DESTINATION, 1000);
+        } else {
+          attemptCount++;
+          let waitTime = 10000 * Math.pow(2, attemptCount - 1);
+          message.textContent = `ACCESS DENIED – LOCKED FOR ${waitTime / 1000} SECONDS`;
+          userInput.contentEditable = "false";
+
+          setTimeout(() => {
+            message.textContent = "";
+            userInput.contentEditable = "true";
+            userInput.innerText = "ENTER PASSWORD";
+            userInput.focus();
+          }, waitTime);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
